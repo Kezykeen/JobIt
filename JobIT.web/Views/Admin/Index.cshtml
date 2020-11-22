@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Job>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var count = 0;
+}
+
+<p>
+    @Html.ActionLink("Create New", "CreateJob", "", new { @class = "btn btn-primary button"})
+</p>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-hover table-responsive table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Company</th>
+                    <th>No Of Applications</th>
+                    <th>Date Created</th>
+                    <th>Created By</th>
+                    <th></th>
+                    <th>Job Functionalities</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@{var current = ++count;}@count</td>
+                        <td>@item.Title</td>
+                        <td>@item.Company</td>
+                        <td>@item.JobApplications.ToArray().Count()</td>
+                        <td>@item.CreatedDate.ToShortDateString()</td>
+                        <td>@item.CreatedBy</td>
+                        <td>@Html.ActionLink("View Applications", "ViewJobApplications", "Admin", new { id = @item.Id }, new { @class = "btn btn-primary" })</td>
+                        <td>
+                            @Html.ActionLink("Edit", "EditJob", new { id = item.Id }) |
+                            @Html.ActionLink("Details", "Details", "Job", new { id = item.Id }) |
+                            @Html.ActionLink("Delete", "DeleteJob", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        
+    </div>
+</div>

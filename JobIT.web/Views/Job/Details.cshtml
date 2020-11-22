@@ -1,0 +1,107 @@
+﻿@model JobIT.web.Models.Job
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="jobHero">
+    @if (@Model.Sector.Name == "Engineering")
+    {
+        <div class="content">
+            <img src="~/designImages/engineering-background.jpg"/>
+            <h1>@Model.Sector.Name</h1>
+        </div>
+    }
+    else if (@Model.Sector.Name == "Technology")
+    {
+        <div class="content">
+            <img src="~/designImages/tech-world-background.jpg"/>
+            <h1>@Model.Sector.Name</h1>
+        </div>
+    }
+    else if (Model.Sector.Name == "Health")
+    {
+        <div class="content">
+            <img src="~/designImages/health-background.jpg"/>
+            <h1>@Model.Sector.Name</h1>
+        </div>
+    }
+
+</div>
+
+<div class="job-details-container container">
+    <div class="card-start job-details container">
+        <div class="title">
+            <h3>@Model.Title</h3>
+            <span class="tag">@Model.JobType.Name</span>
+        </div>
+        <div class="meta">
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="none" d="M0 0h24v24H0z" />
+                    <path d="M7 5V2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4zM4 16v3h16v-3H4zm0-2h16V7H4v7zM9 3v2h6V3H9zm2 8h2v2h-2v-2z" />
+                </svg>
+
+                <span class="meta-text">@Model.Company </span>
+            </div>
+
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                    <path fill="none" d="M0 0h24v24H0z" />
+                    <path d="M12 20.9l4.95-4.95a7 7 0 1 0-9.9 0L12 20.9zm0 2.828l-6.364-6.364a9 9 0 1 1 12.728 0L12 23.728zM12 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2a4 4 0 1 1 0-8 4 4 0 0 1 0 8z" />
+                </svg>
+                <span class="meta-text">@Model.Location</span>
+            </div>
+        </div>
+
+        <div class="job-info">
+            <div>
+                <h4>Job Description</h4>
+                @Model.Description
+            </div>
+            <div>
+                <h4>Key Responsibilties</h4>
+                <div id="resDiv"></div>
+            </div>
+            <div>
+                <h4>Salary Structure: </h4>
+                @Model.Salary
+            </div>
+            <div>
+                <h4>Date Created: </h4>
+                @Model.CreatedDate.ToShortDateString()
+            </div>
+        </div>       
+
+        @Html.ActionLink("Apply Job", "Create", "JobApplications", new { jobId = Model.Id }, new { @class = "btn btn-primary button" })
+    </div>
+
+    <aside>
+        <h2>More Info </h2>
+        <div>
+            <p><b>Job Summary</b></p>
+            @Model.Description
+        </div>
+        <p><b>Salary:</b> @Model.Salary</p>
+        @Html.ActionLink("Apply Job", "Create", "JobApplications", new { jobId = Model.Id }, new { @class = "btn btn-primary button" })
+    </aside>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            // Convert the string gotten from Job responsibilities to html list
+            var res = "@Model.Responsibilities";
+            var resArray = res.split(".");
+
+            // Get the responsibilities div element
+            var resDisplay = document.querySelector('#resDiv');
+
+            // Create markup
+            resDisplay.innerHTML = '<ul>' + resArray.map(function (item) {
+                return '<li>' + item + '</li>';
+            }).join('') + '</ul>';
+        })
+    </script>
+}
+

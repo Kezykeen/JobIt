@@ -1,0 +1,49 @@
+﻿@model IEnumerable<JobIT.web.Models.JobApplications>
+
+@{
+    ViewBag.Title = "ViewApplicationStatus";
+}
+
+<h2>My Applications</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Job.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Job.Company)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Job.Location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Job.Salary)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Job.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Job.Company)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Job.Location)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Job.Salary)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+    </tr>
+}
+
+</table>

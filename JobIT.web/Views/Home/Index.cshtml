@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="hero">
+    <div class="content text-center">
+        <h1>Don't Just Search For Jobs</h1>
+        <h2><span>Find The Right Fit</span> Instead</h2>
+        @Html.ActionLink("Get Started", "Index", "Job", "", new { @class = "btn btn-primary button" })
+    </div>
+
+    <div class="what-we-do">
+        <h2>How JobIT works for you</h2>
+        <hr class="hr"/>
+        <div class="details">
+            <div>
+                <img src="https://img.icons8.com/ios/50/000000/search--v3.png" style="width: 70px; height: 70px" />
+                <h3>Find the right job</h3>
+            </div>
+            <div>
+                <img src="https://img.icons8.com/pastel-glyph/64/000000/briefcase.png" style="width: 70px; height: 70px" />
+                <h3>Apply To Jobs</h3>
+            </div>
+            <div>
+                <img src="https://img.icons8.com/ios-filled/50/000000/handshake.png" style="width: 70px; height: 70px" />
+                <h3>Get Employed</h3>
+            </div>
+        </div>
+    </div>
+</div>

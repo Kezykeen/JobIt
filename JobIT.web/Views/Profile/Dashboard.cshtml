@@ -1,0 +1,54 @@
+﻿@model JobIT.web.Models.UserDetails
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="dashboard-container container">
+    <div class="profile-pic-container">
+        <div class="profile-pic-images">
+            @if (@Url.Content(Model.ProfilePicPath) == null)
+            {
+                <img src="~/designImages/profile-icon.png" />
+            }
+            else
+            {
+                <img src="@Url.Content(Model.ProfilePicPath)" />
+            }
+        </div>
+        <div class="profile-pic-text">
+            <h2>Welcome @User.Identity.GetUserName()!</h2>
+            @using (Html.BeginForm("UploadImage", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.Hidden("Id", Model.Id)
+                <label> Change Profile Picture</label>
+                <br />
+                <input type="file" id="UploadImage" name="File" class="form-control" />
+                <br />
+                <button class="btn btn-danger">Save Picture</button>
+            }
+        </div>
+    </div>
+    
+    
+
+    <div class="dashboard-actions">
+        <div>
+            <img src="~/designImages/resume-icon.png" />
+            <p>Upload your resume once and save yourself the stress of having to do so for every job application</p>
+            @Html.ActionLink("Upload Resume", "", "", new { @class = "btn btn-primary" })
+        </div>
+        <div>
+            <img src="~/designImages/edit-icon.png" />
+            <p>Update your details and have them readily available for every job application</p>
+            @Html.ActionLink("Update Details", "Update", new { id = Model.Id }, new { @class = "btn btn-primary" })
+        </div>
+        <div>
+            <img src="~/designImages/check-icon.png" />
+            <p>We have all your applications carefully stored to ensure you don't lose track of them</p>
+            @Html.ActionLink("My Applications", "ViewApplicationStatus", "", new { @class = "btn btn-primary" })
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

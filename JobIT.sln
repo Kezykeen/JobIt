@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobIT.web", "JobIT.web\JobIT.web.csproj", "{5733A2E4-80BD-47B2-9F25-12A5179412B3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5733A2E4-80BD-47B2-9F25-12A5179412B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5733A2E4-80BD-47B2-9F25-12A5179412B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5733A2E4-80BD-47B2-9F25-12A5179412B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5733A2E4-80BD-47B2-9F25-12A5179412B3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3ADBEF38-E4EF-4331-877E-A1A465A38EA2}
+	EndGlobalSection
+EndGlobal
