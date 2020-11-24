@@ -204,7 +204,7 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="AutoMapperModule.cs" />
+    <Compile Include="Infrastructure\AutoMapperModule.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -220,7 +220,6 @@
     <Compile Include="Models\ApplicationsForAJobViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Job.cs" />
-    <Compile Include="Models\JobApplicant.cs" />
     <Compile Include="Models\JobApplications.cs" />
     <Compile Include="Models\JobApplicationUserDetailsViewModel.cs" />
     <Compile Include="Models\JobType.cs" />
@@ -228,7 +227,7 @@
     <Compile Include="Models\RoleName.cs" />
     <Compile Include="Models\Sector.cs" />
     <Compile Include="Models\UserDetails.cs" />
-    <Compile Include="NinjectDependencyResolver.cs" />
+    <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Respositories\GenericRepos\GenericRepository.cs" />
     <Compile Include="Respositories\GenericRepos\IGenericRepository.cs" />
@@ -242,7 +241,9 @@
     <Compile Include="Respositories\SectorRepos\SectorRepository.cs" />
     <Compile Include="Respositories\UserDetailsRepos\IUserDetailsRepository.cs" />
     <Compile Include="Respositories\UserDetailsRepos\UserDetailsRepository.cs" />
-    <Compile Include="Seeder.cs" />
+    <Compile Include="Infrastructure\Seeder.cs" />
+    <Compile Include="Services\ISendMailNotification.cs" />
+    <Compile Include="Services\SendMailNotification.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -319,7 +320,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Job\Index.cshtml" />
-    <Content Include="Views\Profile\Create.cshtml" />
     <Content Include="Views\Profile\Dashboard.cshtml" />
     <Content Include="Views\Profile\Update.cshtml" />
     <Content Include="Views\Profile\UploadImage.cshtml" />

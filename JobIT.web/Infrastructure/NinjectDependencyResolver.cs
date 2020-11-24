@@ -1,6 +1,7 @@
 ﻿using JobIT.web.Models;
 using JobIT.web.Respositories.Generic;
 using JobIT.web.Respositories.JobRepos;
+using JobIT.web.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ninject;

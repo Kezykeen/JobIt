@@ -180,13 +180,6 @@ namespace JobIT.web.Controllers
                         UserId = user.Id
                     };
                     await _userDetailsRepository.AddAsync(userDetails);
-                    //try
-                    //{
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    return View(model);
-                    //}
 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
@@ -196,7 +189,7 @@ namespace JobIT.web.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Create", "Profile"); // REMINDER: add pop-up for update profile and update later
+                    return RedirectToAction("Dashboard", "Profile"); // REMINDER: add pop-up for update profile and update later
                 }
                 AddErrors(result);
             }

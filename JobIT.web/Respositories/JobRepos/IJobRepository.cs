@@ -11,6 +11,6 @@ namespace JobIT.web.Respositories.JobRepos
 {
     public interface IJobRepository : IGenericRepository<Job>
     {
-        Task SendJobNotificationEmail();
+
     }
 }

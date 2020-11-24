@@ -55,6 +55,10 @@ namespace JobIT.web.Models
         [ScaffoldColumn(false)]
         public HttpPostedFileBase ProfilePicFile { get; set; }
 
+        [ScaffoldColumn(false)]
+        [Display(Name = "Select Picture")]
+        public string ResumePath { get; set; }
+
         public virtual ApplicationUser User { get; set; }
 
         [ScaffoldColumn(false)]

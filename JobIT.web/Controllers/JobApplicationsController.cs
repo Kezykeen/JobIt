@@ -3,6 +3,7 @@ using JobIT.web.Models;
 using JobIT.web.Respositories.JobApplicationsRepo;
 using JobIT.web.Respositories.JobRepos;
 using JobIT.web.Respositories.UserDetailsRepos;
+using JobIT.web.Services;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -20,13 +21,15 @@ namespace JobIT.web.Controllers
         private readonly IJobApplicationsRepository _jobApplicationsRepository;
         private readonly IJobRepository _jobRepository;
         private readonly IUserDetailsRepository _userDetailsRepository;
+        private readonly ISendMailNotification _sendMailNotification;
         private readonly IMapper _mapper;
 
-        public JobApplicationsController(IJobApplicationsRepository jobApplicationRepo, IJobRepository jobRepository, IUserDetailsRepository userDetailsRepo, IMapper mapper)
+        public JobApplicationsController(IJobApplicationsRepository jobApplicationRepo, IJobRepository jobRepository, IUserDetailsRepository userDetailsRepo, ISendMailNotification sendMailNotification, IMapper mapper)
         {
             _jobApplicationsRepository = jobApplicationRepo;
             _jobRepository = jobRepository;
             _userDetailsRepository = userDetailsRepo;
+            _sendMailNotification = sendMailNotification;
             _mapper = mapper;
         }
 
@@ -53,16 +56,37 @@ namespace JobIT.web.Controllers
             if (ModelState.IsValid)
             {
                 var map = _mapper.Map<JobApplications>(details);
-                map.UserId = User.Identity.GetUserId();
+                var userId = User.Identity.GetUserId();
+
+                map.UserId = userId;
+
                 var getJob = await _jobRepository.GetById(jobId);
                 var getJobId = getJob.Id;
+
                 map.JobId = getJobId;
+
+                var getUser = await _userDetailsRepository.GetSingleAsync(c => c.UserId == userId);
+
+                map.ResumePath = getUser.ResumePath;
+                map.ProfilePicPath = getUser.ProfilePicPath;
+
                 var created = await _jobApplicationsRepository.AddAsync(map);
+
                 if (!created)
                 {
                     return View(details);
                 }
+
+
+                //Send mail notification to both the user and the admin
+                var currentUserDetails = await _userDetailsRepository.GetSingleAsync(x => x.UserId == userId);
+                if (currentUserDetails != null)
+                {
+                    await _sendMailNotification.SendMail("kezykeen@gmail.com", "Successfully applied for a job", "Job application notification"); //temp code currentUserDetails.Email
+                }
+
                 return RedirectToAction("Index", "Job");
+
             }
 
             return View(details);

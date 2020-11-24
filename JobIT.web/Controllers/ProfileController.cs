@@ -33,6 +33,11 @@ namespace JobIt.Controllers
         {
             var userId = User.Identity.GetUserId();
             var userDetails = await _userDetailsRepository.GetSingleAsync(c => c.UserId == userId);
+            if (userDetails == null)
+                return HttpNotFound();
+
+            //get string value from upload actions for notification alert
+            ViewBag.msg = TempData["msg"] as string;
             return View(userDetails);
         }
 
@@ -93,11 +98,28 @@ namespace JobIt.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update([Bind(Include = "Id,FirstName,LastName,Email,DateOfBirth,Address,City,State,Country,Phone,ApplicationUserId,UserId,ProfilePicPath")] UserDetails userDetails)
+        public async Task<ActionResult> Update([Bind(Include = "Id,FirstName,LastName,Email,DateOfBirth,Address,City,State,Country,Phone,UserId,ProfilePicPath,ResumePath")] UserDetails userDetails)
         {
             if (ModelState.IsValid)
             {
-                await _userDetailsRepository.Update(userDetails);
+                UserDetails getUser = await _userDetailsRepository.GetById(userDetails.Id);
+                if (getUser == null)
+                {
+                    return HttpNotFound();
+                }
+                getUser.FirstName = userDetails.FirstName != null ? userDetails.FirstName : getUser.FirstName;
+                getUser.LastName = userDetails.LastName != null ? userDetails.LastName : getUser.LastName;
+                getUser.Email = userDetails.Email != null ? userDetails.Email : getUser.Email;
+                getUser.DateOfBirth = userDetails.DateOfBirth != null ? userDetails.DateOfBirth : getUser.DateOfBirth;
+                getUser.Address = userDetails.Address != null ? userDetails.Address : getUser.Address;
+                getUser.City = userDetails.City != null ? userDetails.City : getUser.City;
+                getUser.State = userDetails.State != null ? userDetails.State : getUser.State;
+                getUser.Country = userDetails.Country != null ? userDetails.Country : getUser.Country;
+                getUser.Phone = userDetails.Phone != null ? userDetails.Phone : getUser.Phone;
+                getUser.UserId = userDetails.UserId != null ? userDetails.UserId : getUser.UserId;
+                getUser.ProfilePicPath = userDetails.ProfilePicPath != null ? userDetails.ProfilePicPath : getUser.ProfilePicPath;
+                getUser.ResumePath = userDetails.ResumePath != null ? userDetails.ResumePath : getUser.ResumePath;
+                await _userDetailsRepository.Update(getUser);
                 await _userDetailsRepository.Save();
                 return RedirectToAction("Dashboard");
             }
@@ -121,11 +143,44 @@ namespace JobIt.Controllers
                 filename = Path.Combine(Server.MapPath("~/image/"), filename);
                 File.SaveAs(filename);
             }
-            //await _userDetailsRepository.Save();
+            
             ModelState.Clear();
 
-            var result = "Successfully Uploaded";
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UploadResume(UserDetails userDetails, HttpPostedFileBase File)
+        {
+            var supportedTypes = new[] { ".txt", ".doc", ".docx", ".pdf", ".xls", ".xlsx" };
+            string filename = Path.GetFileNameWithoutExtension(File.FileName);
+            string extension = Path.GetExtension(File.FileName).ToLower();
+
+            if (supportedTypes.Contains(extension))
+            {
+                filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
+
+                userDetails.ResumePath = "~/static/" + filename;
+
+                var currentUser = await _userDetailsRepository.GetById(userDetails.Id);
+                if (currentUser != null)
+                {
+                    currentUser.ResumePath = "~/static/" + filename;
+                    await _userDetailsRepository.Update(currentUser);
+                    filename = Path.Combine(Server.MapPath("~/static/"), filename);
+                    File.SaveAs(filename);
+
+                    ModelState.Clear();
+
+                    TempData["msg"] = "Upload Successful";
+
+                    return RedirectToAction("Dashboard");
+                }
+            }
+
+             TempData["msg"] = "Select a txt, doc, docx, pdf, xls or xlsx document";
+
+            return RedirectToAction("Dashboard");
         }
 
         public async Task<ActionResult> ViewApplicationStatus()

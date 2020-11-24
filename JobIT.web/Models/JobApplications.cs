@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -57,6 +58,16 @@ namespace JobIT.web.Models
         public int JobId { get; set; }
 
         public JobApplicationStatus? Status { get; set; } = JobApplicationStatus.Pending;
+
+        [NotMapped]
+        [ScaffoldColumn(false)]
+        public HttpPostedFileBase ProfilePicFile { get; set; }
+
+        [ScaffoldColumn(false)]
+        public string ProfilePicPath { get; set; }
+
+        [ScaffoldColumn(false)]
+        public string ResumePath { get; set; }
 
         public virtual ApplicationUser User { get; set; }
 

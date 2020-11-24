@@ -7,13 +7,13 @@
 <div class="dashboard-container container">
     <div class="profile-pic-container">
         <div class="profile-pic-images">
-            @if (@Url.Content(Model.ProfilePicPath) == null)
+            @if (!string.IsNullOrEmpty(Model.ProfilePicPath ))
             {
-                <img src="~/designImages/profile-icon.png" />
+                <img src="@Url.Content(Model.ProfilePicPath)" />
             }
             else
             {
-                <img src="@Url.Content(Model.ProfilePicPath)" />
+                <img src="~/designImages/profile-icon.png" />
             }
         </div>
         <div class="profile-pic-text">
@@ -21,22 +21,23 @@
             @using (Html.BeginForm("UploadImage", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.Hidden("Id", Model.Id)
-                <label> Change Profile Picture</label>
+                <label for="UploadImage"> Change Profile Picture</label>
                 <br />
-                <input type="file" id="UploadImage" name="File" class="form-control" />
+                <input type="file" id="UploadImage" name="File" class="form-control-file" />
                 <br />
-                <button class="btn btn-danger">Save Picture</button>
+                <button id="save" class="btn btn-danger">Save Picture</button>
             }
         </div>
     </div>
-    
-    
+
+
 
     <div class="dashboard-actions">
         <div>
             <img src="~/designImages/resume-icon.png" />
             <p>Upload your resume once and save yourself the stress of having to do so for every job application</p>
-            @Html.ActionLink("Upload Resume", "", "", new { @class = "btn btn-primary" })
+            <a href="@Url.Action("UploadResume", "Profile")" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop">Upload Resume</a>
+
         </div>
         <div>
             <img src="~/designImages/edit-icon.png" />
@@ -49,6 +50,52 @@
             @Html.ActionLink("My Applications", "ViewApplicationStatus", "", new { @class = "btn btn-primary" })
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Upload Resume</h5>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("UploadResume", "Profile", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.Hidden("Id", Model.Id)
+                        <input type="file" id="UploadResume" name="File" class="form-control-file" />
+                        <br />
+                        <button class="btn btn-primary button">Save Resume</button>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#myModal').on('shown.bs.modal', function () {
+                $('#myInput').trigger('focus')
+            })
+
+
+        })
+
+        var strValue = "@((string)ViewBag.msg)";
+        if (strValue == "Upload Successful") {
+            swal("", strValue, "success");
+        }
+        else if (strValue == "Select a txt, doc, docx, pdf, xls or xlsx document")
+        {
+            swal("", strValue, "error");
+        }
+            
+        
+
+    </script>
+}

@@ -5,6 +5,8 @@ using JobIT.web.Respositories;
 using JobIT.web.Respositories.JobApplicationsRepo;
 using JobIT.web.Respositories.JobRepos;
 using JobIT.web.Respositories.SectorRepos;
+using JobIT.web.Respositories.UserDetailsRepos;
+using JobIT.web.Services;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -24,14 +26,18 @@ namespace JobIT.web.Controllers
         private readonly IJobApplicationsRepository _jobApplicationsRepository;
         private readonly IJobTypeRepository _jobTypeRepository;
         private readonly ISectorRepository _sectorRepository;
+        private readonly IUserDetailsRepository _userDetailsRepository;
         private readonly IMapper _mapper;
+        private readonly ISendMailNotification _sendMailNotification;
 
-        public AdminController(IJobRepository jobRepository, IJobApplicationsRepository jobApplicationsRepository, IJobTypeRepository jobTypeRepository, ISectorRepository sectorRepository, IMapper mapper)
+        public AdminController(IJobRepository jobRepository, IJobApplicationsRepository jobApplicationsRepository, IJobTypeRepository jobTypeRepository, ISectorRepository sectorRepository, IUserDetailsRepository userDetailsRepo, ISendMailNotification sendMailNotification, IMapper mapper)
         {
             _jobRepository = jobRepository;
             _jobApplicationsRepository = jobApplicationsRepository;
             _jobTypeRepository = jobTypeRepository;
             _sectorRepository = sectorRepository;
+            _userDetailsRepository = userDetailsRepo;
+            _sendMailNotification = sendMailNotification;
             _mapper = mapper;
         }
 
@@ -163,77 +169,59 @@ namespace JobIT.web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ViewApplication([Bind(Include = "Id,FirstName,LastName,Email,DateOfBirth,Address,City,State,Country,Phone,JobId,Status,UserId")] JobApplications jobApplications)
+        public async Task<ActionResult> ViewApplication([Bind(Include = "Id,FirstName,LastName,Email,DateOfBirth,Address,City,State,Country,Phone,JobId,Status,UserId")] JobApplications jobApplications, int? id)
         {
             if (ModelState.IsValid)
             {
                 await _jobApplicationsRepository.Update(jobApplications);
                 await _jobApplicationsRepository.Save();
+
+                var userId = User.Identity.GetUserId();
+                var currentUserDetails = await _userDetailsRepository.GetSingleAsync(x => x.UserId == userId);
+                JobApplications getJob = await _jobApplicationsRepository.GetById(id);
+
+                if (getJob != null)
+                {
+                    bool changed = getJob.Status != jobApplications.Status;
+                    if (changed)
+                    {
+                        if (currentUserDetails != null)
+                        {
+                            await _sendMailNotification.SendMail("kezykeen@gmail.com", "Your job application has been reviewed, visit your dashboard for more details", "Job application notification");
+                        }
+                    }
+                }
+
                 return RedirectToAction("Index");
             }
 
             return View(jobApplications);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> UpdateJobStatus(UpdateJobDto model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Get", new { Id = model.Id });
-            }
-
-            var currentJob = await _jobRepository.GetById(model.Id);
-            if (currentJob == null)
-            {
-                return HttpNotFound();
-            }
-            currentJob.Status = model.Status;
-            var result = await _jobRepository.Update(currentJob);
-            if (result == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ViewBag.success = "Updated job status";
-            return RedirectToAction("Get", new { Id = model.Id });
-        }
-
+       
         [HttpGet]
         public async Task<ActionResult> ViewJobApplications(int Id)
         {
-            var applications = await _jobApplicationsRepository.Get(c => c.Id == Id);
+            var applications = await _jobApplicationsRepository.Get(c => c.JobId == Id);
             applications = applications.Include("Job");
             return View(applications);
         }
 
-        /*[HttpPost]
-        public async Task<ActionResult> UpdateApplicantStatus(UpdateJobApplicantDto model)
+        public async Task<ActionResult> DownloadFile(int Id)
         {
-            if (!ModelState.IsValid)
+            var file = "";
+            JobApplications getJobApplication = await _jobApplicationsRepository.GetById(Id);
+            if (getJobApplication != null)
             {
-                return RedirectToAction("Get", new { Id = model.JobId });
+                file = getJobApplication.ResumePath;
+                string[] extension = file.Split('.');
+                return File(file, extension[1]);
             }
-
-            var currentJob = await _jobRepository.GetById(model.JobId);
-            if (currentJob == null)
-            {
-                return HttpNotFound();
-            }
-
-            var currentApplicant = currentJob.Applicants.FirstOrDefault(X => X.Id == model.ApplicantId);
-            if (currentApplicant == null)
+            else
             {
                 return HttpNotFound();
             }
-            currentApplicant.Status = model.Status;
-            currentApplicant.UpdatedAt = DateTime.UtcNow;
-            var result = await _jobRepository.Update(currentJob);
-            if (result == null)
-            {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
-            }
-            ViewBag.success = "updated job status";
-            return RedirectToAction("Get", new { Id = model.JobId });
-        }*/
+
+        }
     }
 }
