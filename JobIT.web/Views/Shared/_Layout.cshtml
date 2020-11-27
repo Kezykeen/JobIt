@@ -6,14 +6,13 @@
     <title>@ViewBag.Title - JobIT</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link href="~/Content/Site.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudfare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css"/>
+
     <meta name="description" content="The description of my page" />
 </head>
 <body>
 
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top container-fluid">
+        <nav class="navbar navbar-expand-lg fixed-top container-fluid">
             <a class="navbar-brand brand_logo" href="#"><span>Job</span>IT</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -36,8 +35,33 @@
             </div>
         </nav>
     </header>
-    @RenderBody()
-
+    @if (User.IsInRole("Admin"))
+    {
+        <div>
+            @Html.Partial("_Notifications")
+            @RenderBody()
+            <img id="trigger" src="~/designImages/diamond_logo.png" />
+            <div class="sidenav">
+                <header>Dashboard <img id="closeSideNav" src="~/designImages/close.png"/></header>
+                <ul>
+                    <li><a href="@Url.Action("CreateJob", "Admin")"><img src="~/designImages/create-icon.png"/>Create Job</a></li>
+                    <li><a href="@Url.Action("ApplicationsAccepted", "Admin")"><img src="~/designImages/accepted-icon.png"/>Applications Accepted <span class="badge badge-light">9</span></a></li>
+                    <li><a href="@Url.Action("ApplicationsRejected", "Admin")"><img src="~/designImages/rejected-icon.png"/>Applications Rejected</a></li>
+                    <li><a href="@Url.Action("ApplicationsUnattended", "Admin")"><img src="~/designImages/unattended-icon.png"/>Applications Unattended</a></li>
+                    <li><a href="@Url.Action("TotalApplications", "Admin")"><img src="~/designImages/total-applications-icon.png" />Total Applications</a></li>
+                    <li><a href="@Url.Action("TotalUsers", "Admin")"><img src="~/designImages/total-users-icon.png"/>Total Users</a></li>
+                </ul>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="lead">
+            @Html.Partial("_Notifications")
+            @RenderBody()
+        </div>
+    }
+    
     <footer>
         <div class="footer-text">
             <a href="#">Contact Us</a>
@@ -60,7 +84,25 @@
 </body>
 </html>
 
-@section scripts{
-    <script src="https://cdnjs.cloudfare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+@section Scripts {
+@Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#openSideNav").click(function () {
+                $(".sidenav").css("left", "0px");
+            })
+            $("#closeSideNav").click(function () {
+                $(".sidenav").css("left", "-330px");
+            })
 
+            $("#trigger").click(function () {
+                $(".sidenav").toggleClass("active");
+            });
+
+            $("#trigger").click(function () {
+                $("#trigger").toggleClass("active");
+            });
+
+        })
+    </script>
 }

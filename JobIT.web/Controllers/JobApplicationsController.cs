@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using JobIT.web.Extensions;
 using JobIT.web.Models;
 using JobIT.web.Respositories.JobApplicationsRepo;
 using JobIT.web.Respositories.JobRepos;
@@ -74,16 +75,20 @@ namespace JobIT.web.Controllers
 
                 if (!created)
                 {
+                    this.AddNotification("Application Failed", NotificationType.ERROR); //error alert for failed job application
                     return View(details);
                 }
 
 
-                //Send mail notification to both the user and the admin
+                //Send mail notification to the user after successful application
                 var currentUserDetails = await _userDetailsRepository.GetSingleAsync(x => x.UserId == userId);
                 if (currentUserDetails != null)
                 {
-                    await _sendMailNotification.SendMail("kezykeen@gmail.com", "Successfully applied for a job", "Job application notification"); //temp code currentUserDetails.Email
+                    var mail = $"Your application for {map.Job.Title} at {map.Job.Company} was successful," + $" We will get back to you with details of our feedback. Ensure to frequent your dashboard.";
+                    await _sendMailNotification.SendMail("kezykeen@gmail.com", mail, "Job application notification"); //temp code currentUserDetails.Email
                 }
+
+                this.AddNotification("Application Successful", NotificationType.SUCCESS); //success alert for successful job application
 
                 return RedirectToAction("Index", "Job");
 

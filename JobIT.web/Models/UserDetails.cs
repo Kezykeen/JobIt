@@ -27,9 +27,9 @@ namespace JobIT.web.Models
         [Display(Name = "Email Address")]
         public string Email { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         [DisplayName("Date Of Birth")]
-        public System.DateTime? DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         [StringLength(70)]
         public string Address { get; set; }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JobIT.web.Dto;
+using JobIT.web.Extensions;
 using JobIT.web.Models;
 using JobIT.web.Respositories;
 using JobIT.web.Respositories.JobApplicationsRepo;
@@ -45,8 +46,8 @@ namespace JobIT.web.Controllers
         public async Task<ActionResult> Index()
         {
             var result = await _jobRepository.Get(null);
-            result = result.Include("JobApplications");;
-            
+            result = result.Include("JobApplications"); ;
+
             return View(result);
         }
 
@@ -69,11 +70,14 @@ namespace JobIT.web.Controllers
             var created = await _jobRepository.AddAsync(map);
             if (!created)
             {
+                this.AddNotification("Job creation failed", NotificationType.ERROR); // error alert for failed job creation
                 return View(model);
             }
 
             ViewBag.JobTypeId = new SelectList(_jobTypeRepository.ToList(), "Id", "Name", model.JobTypeId);
             ViewBag.SectorId = new SelectList(_sectorRepository.ToList(), "Id", "Name", model.SectorId);
+
+            this.AddNotification("Job Created Successfully", NotificationType.SUCCESS); //success alert for job creation
             return RedirectToAction("Index");
         }
 
@@ -116,11 +120,15 @@ namespace JobIT.web.Controllers
             {
                 await _jobRepository.Update(job);
                 await _jobRepository.Save();
+
+                this.AddNotification("Job updated successfully", NotificationType.SUCCESS);
                 return RedirectToAction("Index");
             }
 
             ViewBag.JobTypeId = new SelectList(_jobTypeRepository.ToList(), "Id", "Name", job.JobTypeId);
             ViewBag.SectorId = new SelectList(_sectorRepository.ToList(), "Id", "Name", job.SectorId);
+
+            this.AddNotification("Job update failed", NotificationType.ERROR);
             return View(job);
         }
 
@@ -149,6 +157,45 @@ namespace JobIT.web.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<ActionResult> ApplicationsAccepted()
+        {
+            var getApplications = await _jobApplicationsRepository.Get(null);
+            var applicationssAccepted = getApplications.Where(c => c.Status.ToString() == "Accepted").Include("Job");
+
+            return View(applicationssAccepted);
+        }
+
+        public async Task<ActionResult> ApplicationsRejected()
+        {
+            var getApplications = await _jobApplicationsRepository.Get(null);
+            var applicationsRejected = getApplications.Where(c => c.Status.ToString() == "Rejected").Include("Job");
+
+            return View(applicationsRejected);
+        }
+
+        public async Task<ActionResult> ApplicationsUnattended()
+        {
+            var getApplications = await _jobApplicationsRepository.Get(null);
+            var applicationsUnattended = getApplications.Where(c => c.Status.ToString() == "Pending").Include("Job");
+
+            return View(applicationsUnattended);
+        }
+
+        public async Task<ActionResult> TotalApplications()
+        {
+            var getApplications = await _jobApplicationsRepository.Get(null);
+            getApplications = getApplications.Include("Job");
+
+            return View(getApplications);
+        }
+
+        public async Task<ActionResult> TotalUsers()
+        {
+            var getUsers = await _userDetailsRepository.Get(null);
+
+            return View(getUsers);
+        }
+
         // GET: JobApplications/Edit/5
         public async Task<ActionResult> ViewApplication(int? id)
         {
@@ -169,28 +216,36 @@ namespace JobIT.web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ViewApplication([Bind(Include = "Id,FirstName,LastName,Email,DateOfBirth,Address,City,State,Country,Phone,JobId,Status,UserId")] JobApplications jobApplications, int? id)
+        public async Task<ActionResult> ViewApplication([Bind(Include = "Id,FirstName,LastName,Email,DateOfBirth,Address,City,State,Country,Phone,JobId,Status,UserId,ProfilePicPath,ResumePath")] JobApplications jobApplications)
         {
             if (ModelState.IsValid)
             {
-                await _jobApplicationsRepository.Update(jobApplications);
-                await _jobApplicationsRepository.Save();
+                JobApplications getJobApplication = await _jobApplicationsRepository.GetById(jobApplications.Id);
 
-                var userId = User.Identity.GetUserId();
-                var currentUserDetails = await _userDetailsRepository.GetSingleAsync(x => x.UserId == userId);
-                JobApplications getJob = await _jobApplicationsRepository.GetById(id);
-
-                if (getJob != null)
+                if (getJobApplication != null)
                 {
-                    bool changed = getJob.Status != jobApplications.Status;
+                    bool changed = getJobApplication.Status != jobApplications.Status;
                     if (changed)
                     {
-                        if (currentUserDetails != null)
+                        var jobAppliedFor = await _jobRepository.GetSingleAsync(c => c.Id == jobApplications.JobId);
+
+                        if (jobApplications.Status.ToString() == "Accepted")
                         {
-                            await _sendMailNotification.SendMail("kezykeen@gmail.com", "Your job application has been reviewed, visit your dashboard for more details", "Job application notification");
+                            var mail = $"Congratulations!" + $" Your application for {jobAppliedFor.Title} at {jobAppliedFor.Company} has been accepted." + $" We will get to you very soon with details of your employment.";
+                            await _sendMailNotification.SendMail("kezykeen@gmail.com", mail, "Job Application Has Been Reviewed"); //temp code jobApplication.Email
                         }
+                        else
+                        {
+                            var mail = $"Your application for {jobAppliedFor.Title} at {jobAppliedFor.Company} has been rejected." + $" Don't lose hope though, with our ever growing list of jobs, you can be sure to never run out of possible jobs.";
+                            await _sendMailNotification.SendMail("kezykeen@gmail.com", mail, "Job Application Has Been Reviewed"); //temp code currentUserDetails.Email
+                        }
+                        getJobApplication.Status = jobApplications.Status;
+                        await _jobApplicationsRepository.Update(getJobApplication);
+                        this.AddNotification("Application Review successfully", NotificationType.SUCCESS);
                     }
                 }
+
+
 
                 return RedirectToAction("Index");
             }
@@ -198,7 +253,7 @@ namespace JobIT.web.Controllers
             return View(jobApplications);
         }
 
-       
+
         [HttpGet]
         public async Task<ActionResult> ViewJobApplications(int Id)
         {
@@ -214,14 +269,13 @@ namespace JobIT.web.Controllers
             if (getJobApplication != null)
             {
                 file = getJobApplication.ResumePath;
-                string[] extension = file.Split('.');
-                return File(file, extension[1]);
+                var fileSplit = file.Split('/');
+                return File(file, "application/" + file.Split('.')[1], fileSplit[fileSplit.Length - 1]);
             }
             else
             {
                 return HttpNotFound();
             }
-
         }
     }
 }

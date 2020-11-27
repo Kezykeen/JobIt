@@ -94,6 +94,8 @@ namespace JobIT.web.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    //redirect a user to thier dashboard if they login from the homwpage
+                    //if not on hompage, redirect back to same url after login
                     if (HttpContext.Request.Url.AbsolutePath.Contains("Home/Index"))
                     {
                         return View("Dashboard");
@@ -174,6 +176,7 @@ namespace JobIT.web.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //after successful registration, create an automatic userdetails entry for the user which he/she can update later
                     var userDetails = new UserDetails
                     {
                         Email = model.Email,

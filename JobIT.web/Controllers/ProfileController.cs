@@ -13,6 +13,7 @@ using System.Data.Entity.Infrastructure;
 using JobIT.web.Respositories.UserDetailsRepos;
 using System.Threading.Tasks;
 using JobIT.web.Respositories.JobApplicationsRepo;
+using JobIT.web.Extensions;
 
 namespace JobIt.Controllers
 {
@@ -102,25 +103,10 @@ namespace JobIt.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserDetails getUser = await _userDetailsRepository.GetById(userDetails.Id);
-                if (getUser == null)
-                {
-                    return HttpNotFound();
-                }
-                getUser.FirstName = userDetails.FirstName != null ? userDetails.FirstName : getUser.FirstName;
-                getUser.LastName = userDetails.LastName != null ? userDetails.LastName : getUser.LastName;
-                getUser.Email = userDetails.Email != null ? userDetails.Email : getUser.Email;
-                getUser.DateOfBirth = userDetails.DateOfBirth != null ? userDetails.DateOfBirth : getUser.DateOfBirth;
-                getUser.Address = userDetails.Address != null ? userDetails.Address : getUser.Address;
-                getUser.City = userDetails.City != null ? userDetails.City : getUser.City;
-                getUser.State = userDetails.State != null ? userDetails.State : getUser.State;
-                getUser.Country = userDetails.Country != null ? userDetails.Country : getUser.Country;
-                getUser.Phone = userDetails.Phone != null ? userDetails.Phone : getUser.Phone;
-                getUser.UserId = userDetails.UserId != null ? userDetails.UserId : getUser.UserId;
-                getUser.ProfilePicPath = userDetails.ProfilePicPath != null ? userDetails.ProfilePicPath : getUser.ProfilePicPath;
-                getUser.ResumePath = userDetails.ResumePath != null ? userDetails.ResumePath : getUser.ResumePath;
-                await _userDetailsRepository.Update(getUser);
+                await _userDetailsRepository.Update(userDetails);
                 await _userDetailsRepository.Save();
+
+                this.AddNotification("Profile Successfully Updated", NotificationType.SUCCESS);
                 return RedirectToAction("Dashboard");
             }
             return View(userDetails);
@@ -142,9 +128,13 @@ namespace JobIt.Controllers
                 await _userDetailsRepository.Update(currentUser);
                 filename = Path.Combine(Server.MapPath("~/image/"), filename);
                 File.SaveAs(filename);
+
+                this.AddNotification("Profile Picture Successfully Updated", NotificationType.SUCCESS);
             }
             
             ModelState.Clear();
+
+            this.AddNotification("Upload Failed", NotificationType.ERROR);
 
             return RedirectToAction("Dashboard");
         }
@@ -155,30 +145,34 @@ namespace JobIt.Controllers
             var supportedTypes = new[] { ".txt", ".doc", ".docx", ".pdf", ".xls", ".xlsx" };
             string filename = Path.GetFileNameWithoutExtension(File.FileName);
             string extension = Path.GetExtension(File.FileName).ToLower();
-
-            if (supportedTypes.Contains(extension))
+            try
             {
-                filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
-
-                userDetails.ResumePath = "~/static/" + filename;
-
-                var currentUser = await _userDetailsRepository.GetById(userDetails.Id);
-                if (currentUser != null)
+                if (supportedTypes.Contains(extension))
                 {
-                    currentUser.ResumePath = "~/static/" + filename;
-                    await _userDetailsRepository.Update(currentUser);
-                    filename = Path.Combine(Server.MapPath("~/static/"), filename);
-                    File.SaveAs(filename);
+                    filename = filename + DateTime.Now.ToString("yymmssfff") + extension;
 
-                    ModelState.Clear();
+                    userDetails.ResumePath = "~/static/" + filename;
 
-                    TempData["msg"] = "Upload Successful";
+                    var currentUser = await _userDetailsRepository.GetById(userDetails.Id);
+                    if (currentUser != null)
+                    {
+                        currentUser.ResumePath = "~/static/" + filename;
+                        await _userDetailsRepository.Update(currentUser);
+                        filename = Path.Combine(Server.MapPath("~/static/"), filename);
+                        File.SaveAs(filename);
 
-                    return RedirectToAction("Dashboard");
+                        ModelState.Clear();
+
+                        this.AddNotification("Resume Uploaded Successfully", NotificationType.SUCCESS);
+
+                        return RedirectToAction("Dashboard");
+                    }
                 }
             }
-
-             TempData["msg"] = "Select a txt, doc, docx, pdf, xls or xlsx document";
+            catch (Exception ex)
+            {
+                this.AddNotification("Select a txt, doc, docx, pdf, xls or xlsx document", NotificationType.ERROR);
+            }
 
             return RedirectToAction("Dashboard");
         }

@@ -30,8 +30,6 @@
         </div>
     </div>
 
-
-
     <div class="dashboard-actions">
         <div>
             <img src="~/designImages/resume-icon.png" />
@@ -64,7 +62,7 @@
                         @Html.Hidden("Id", Model.Id)
                         <input type="file" id="UploadResume" name="File" class="form-control-file" />
                         <br />
-                        <button class="btn btn-primary button">Save Resume</button>
+                        <button class="btn btn-primary button" id="resumeAlert">Save Resume</button>
                     }
                 </div>
                 <div class="modal-footer">
@@ -75,27 +73,14 @@
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
 @section scripts{
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#myModal').on('shown.bs.modal', function () {
                 $('#myInput').trigger('focus')
             })
-
-
         })
-
-        var strValue = "@((string)ViewBag.msg)";
-        if (strValue == "Upload Successful") {
-            swal("", strValue, "success");
-        }
-        else if (strValue == "Select a txt, doc, docx, pdf, xls or xlsx document")
-        {
-            swal("", strValue, "error");
-        }
-            
-        
-
     </script>
 }

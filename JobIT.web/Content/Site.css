@@ -38,31 +38,100 @@ textarea {
     border: none !important;
 }
 
+.lead {
+    font-size: 1.15rem;
+}
+
 .form-row {
     margin-right: 0;
     margin-left: 0;
 }
 
+/*SideNav*/
+.sidenav {
+  height: 100%;
+  width: 330px; 
+  position: fixed;
+  background-color: #042331;
+  z-index: 4; /* Stay on top */
+  top: 0; /* Stay at the top */
+  transform: translate(-150%,0px);
+  transition:all 0.75s ease-in-out;
+  overflow-x: hidden;
+  margin-top: 30px;
+  padding-top: 21px;
+}
+.sidenav header {
+    font-size: 22px;
+    color: white;
+    text-align: center;
+    line-height: 70px;
+    background: #063146;
+    user-select: none;
+}
+.sidenav header img {
+    margin-left: 20px;
+    background-color: white;
+    width: 20px;
+    height: 20px;
+}
+.sidenav a {
+  list-style-type: none;
+  text-decoration: none;
+  font-size: 20px;
+  color:white;
+  display: block;
+  height: 100%;
+  padding-left: 30px;
+  line-height: 65px;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255,255,255,.1);
+  border-bottom: 1px solid black;
+  transition: .4s;
+}
+.sidenav a:hover {
+  padding-left: 50px;
+}
+.sidenav a img {
+    width: 30px;
+    height: 30px;
+    margin-right: 16px;
+}
+.sidenav.active {
+  transform: translate(0%,0px);
+  transition:all 0.75s ease-in-out;
+}
+
+#trigger {
+    color: white;
+    position: absolute;
+    top: 60px;
+    left: 300px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
 /*Homepage*/
 .navbar {
     height: 55px !important;
+    background-color: #042331 !important;
     font-size: 17px;
 }
 .brand_logo {
-    color: #eb3370 !important;
+    color: #e21156 !important;
     font-size: 25px;
 }
 .brand_logo span {
-    color: #659ebf;
+    color: white;
 }
 
-.nav a {
-     color: #000 !important;
+.nav a, .nav-link {
+     color: white !important;
      opacity: 0.8;
      text-decoration: none !important;
 }
-
-.nav a:hover {
+.nav a:hover, .nav-link:hover {
     opacity: 1;
 }
 
@@ -92,7 +161,7 @@ textarea {
 
 .button {
      color: white !important;
-     background: #659ebf !important;
+     background: #063146 !important;
      padding: 3px 24px !important;
      height: 35px;
      opacity: 1 !important;
@@ -101,7 +170,7 @@ textarea {
      transition: background-color 0.1s ease-in-out;
 }
 .button:hover {
-    background-color: #eb3370 !important;
+    background-color: #bf104a !important;
     border-color: #eb3370 !important;
 }
 
@@ -151,7 +220,8 @@ textarea {
 }
 
 .hero .content h2 span {
-    color: #eb3370;
+    font-weight: 600;
+    color: #e21156;
 }
 
 .hero .content h1 b{
@@ -173,25 +243,26 @@ textarea {
     align-items: center;
     margin-bottom: 140px;
 }
-
 .what-we-do .details {
     display: flex;
     flex-direction: row;
     width: 70vw;
-    margin-top: 30px;
+    margin-top: 40px;
     justify-content: space-between;
     align-items: center;
 }
-
 .what-we-do .details div {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+.what-we-do .details div img {
+    margin-bottom: 30px;
+}
 
 .hr {
-    border: 1px solid #eb3370;
+    border: 1px solid #bf104a;
     width: 20vw;
 }
 
@@ -207,7 +278,7 @@ textarea {
 }
 .job-index-header h1 {
     position: relative;
-    top: -90px;
+    top: -80px;
     color: white;
 }
 
@@ -262,7 +333,6 @@ textarea {
      color: #ffffff;
      padding: 4px 16px;
      margin-left: 16px;
-     margin-top: 10px;
      border-radius: 24px;
      font-size: 12px;
 }
@@ -414,40 +484,54 @@ aside p {
     padding-left: 40px;
 }
 
-/*Create Job Application*/
+/*Create Job Application and Update User Details*/
 .job-application-container, .update-details-container {
-    width: 50vw;
+    width: 60vw;
+    padding: 20px;
     background: white;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.job-application-container .form-group {
-    width: 80%;
-    display: flex;
-    justify-content: space-around !important;
-    margin-right: 30px;
+.job-application-container .form-group label, .update-details-container .form-group label {
+    margin-left: 12px;
 }
-.job-application-container .form-group:last-of-type {
-    justify-content: center;
-    align-items:center;
-    margin-top: 15px;
-}
-.submit-button {
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    padding-left: 25px;
-}
-.control-label {
-    width: 200px;
-    margin-left: 40px;
+.application-button {
+    width: 220px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    text-align: center;
 }
 
 /*Admin Index*/
 .resume-button {
-    width: 200px !important;
-    margin-right: 320px;
+    width: 210px !important;
+    padding-bottom: 100px;
+}
+
+.review-application-container {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 30px;
+    background-color: white;
+    margin-top: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+}
+.form-group label {
+    margin: 0 36px 5px 0;
+    width: 80%;
+}
+.form-group input {
+    width: 90%;
 }
 
 
@@ -464,7 +548,7 @@ footer {
   position: fixed;
   bottom: 0;
   padding: 0 25px;
-  background-color: #447997;
+  background-color: #042331;
   z-index: 3;
 }
 

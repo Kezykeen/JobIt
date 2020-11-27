@@ -28,9 +28,9 @@ namespace JobIT.web.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Date of Birth is required")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         [DisplayName("Date Of Birth")]
-        public System.DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Address is required")]
         [StringLength(70)]
