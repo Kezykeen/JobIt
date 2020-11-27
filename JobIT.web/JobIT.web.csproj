@@ -266,6 +266,7 @@
     <Content Include="designImages\engineering-background.jpg" />
     <Content Include="designImages\facebook-logo.png" />
     <Content Include="designImages\footprint.png" />
+    <Content Include="designImages\hamburger.png" />
     <Content Include="designImages\health-background.jpg" />
     <Content Include="designImages\instagram-logo.png" />
     <Content Include="designImages\main-background-image.jpg" />

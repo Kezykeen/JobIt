@@ -86,6 +86,14 @@
             $(".state").val("@Model.State");
             $(".country").val("@Model.Country");
             $(".phoneNumber").val("@Model.Phone");
+
+            $("#openSideNav").click(function () {
+                $(".sidenav").toggleClass("active");
+            });
+
+            $("#closeSideNav").click(function () {
+                $(".sidenav").toggleClass("active");
+            });
         })
     </script>
 }

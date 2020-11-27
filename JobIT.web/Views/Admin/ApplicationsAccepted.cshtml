@@ -46,3 +46,18 @@
 }
 
 </table>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#openSideNav").click(function () {
+                $(".sidenav").toggleClass("active");
+            });
+
+            $("#closeSideNav").click(function () {
+                $(".sidenav").toggleClass("active");
+            });
+        })
+    </script>
+}

@@ -7,13 +7,21 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
-    <meta name="description" content="The description of my page" />
+    <meta name="description" content="A simple job recruitment web application using ASP.NET MVC" />
 </head>
 <body>
-
     <header>
         <nav class="navbar navbar-expand-lg fixed-top container-fluid">
-            <a class="navbar-brand brand_logo" href="#"><span>Job</span>IT</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <img id="openSideNav" class="mr-2" src="~/designImages/hamburger.png" />
+                <a class="navbar-brand brand_logo" href="#"><span>Job</span>IT</a>
+            }
+            else
+            {
+                <a class="navbar-brand brand_logo" href="#"><span>Job</span>IT</a>
+            }
+            
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -40,16 +48,16 @@
         <div>
             @Html.Partial("_Notifications")
             @RenderBody()
-            <img id="trigger" src="~/designImages/diamond_logo.png" />
+            
             <div class="sidenav">
-                <header>Dashboard <img id="closeSideNav" src="~/designImages/close.png"/></header>
+                <header>Dashboard</header>
                 <ul>
                     <li><a href="@Url.Action("CreateJob", "Admin")"><img src="~/designImages/create-icon.png"/>Create Job</a></li>
-                    <li><a href="@Url.Action("ApplicationsAccepted", "Admin")"><img src="~/designImages/accepted-icon.png"/>Applications Accepted <span class="badge badge-light">9</span></a></li>
-                    <li><a href="@Url.Action("ApplicationsRejected", "Admin")"><img src="~/designImages/rejected-icon.png"/>Applications Rejected</a></li>
-                    <li><a href="@Url.Action("ApplicationsUnattended", "Admin")"><img src="~/designImages/unattended-icon.png"/>Applications Unattended</a></li>
-                    <li><a href="@Url.Action("TotalApplications", "Admin")"><img src="~/designImages/total-applications-icon.png" />Total Applications</a></li>
-                    <li><a href="@Url.Action("TotalUsers", "Admin")"><img src="~/designImages/total-users-icon.png"/>Total Users</a></li>
+                    <li><a href="@Url.Action("ApplicationsAccepted", "Admin")"><img src="~/designImages/accepted-icon.png"/>Applications Accepted <span class="badge badge-light">@TempData["acceptedCount"]</span></a></li>
+                    <li><a href="@Url.Action("ApplicationsRejected", "Admin")"><img src="~/designImages/rejected-icon.png"/>Applications Rejected <span class="badge badge-light">@TempData["rejectedCount"]</span></a></li>
+                    <li><a href="@Url.Action("ApplicationsUnattended", "Admin")"><img src="~/designImages/unattended-icon.png"/>Applications Unattended <span class="badge badge-light">@TempData["unattendedCount"]</span></a></li>
+                    <li><a href="@Url.Action("TotalApplications", "Admin")"><img src="~/designImages/total-applications-icon.png" />Total Applications <span class="badge badge-light">@TempData["applicationsCount"]</span></a></li>
+                    <li><a href="@Url.Action("TotalUsers", "Admin")"><img src="~/designImages/total-users-icon.png"/>Total Users <span class="badge badge-light">@TempData["usersCount"]</span></a></li>
                 </ul>
             </div>
         </div>
@@ -85,24 +93,16 @@
 </html>
 
 @section Scripts {
-@Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
             $("#openSideNav").click(function () {
-                $(".sidenav").css("left", "0px");
-            })
-            $("#closeSideNav").click(function () {
-                $(".sidenav").css("left", "-330px");
-            })
-
-            $("#trigger").click(function () {
                 $(".sidenav").toggleClass("active");
             });
 
-            $("#trigger").click(function () {
-                $("#trigger").toggleClass("active");
+            $("#closeSideNav").click(function () {
+                $(".sidenav").toggleClass("active");
             });
-
         })
     </script>
 }

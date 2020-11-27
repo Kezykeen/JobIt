@@ -162,6 +162,8 @@ namespace JobIT.web.Controllers
             var getApplications = await _jobApplicationsRepository.Get(null);
             var applicationssAccepted = getApplications.Where(c => c.Status.ToString() == "Accepted").Include("Job");
 
+            TempData["acceptedCount"] = applicationssAccepted.ToArray().Count();
+
             return View(applicationssAccepted);
         }
 
@@ -169,6 +171,8 @@ namespace JobIT.web.Controllers
         {
             var getApplications = await _jobApplicationsRepository.Get(null);
             var applicationsRejected = getApplications.Where(c => c.Status.ToString() == "Rejected").Include("Job");
+
+            TempData["rejectedCount"] = applicationsRejected.ToArray().Count();
 
             return View(applicationsRejected);
         }
@@ -178,6 +182,8 @@ namespace JobIT.web.Controllers
             var getApplications = await _jobApplicationsRepository.Get(null);
             var applicationsUnattended = getApplications.Where(c => c.Status.ToString() == "Pending").Include("Job");
 
+            TempData["unattendedCount"] = applicationsUnattended.ToArray().Count();
+
             return View(applicationsUnattended);
         }
 
@@ -186,12 +192,16 @@ namespace JobIT.web.Controllers
             var getApplications = await _jobApplicationsRepository.Get(null);
             getApplications = getApplications.Include("Job");
 
+            TempData["applicationsCount"] = getApplications.ToArray().Count();
+
             return View(getApplications);
         }
 
         public async Task<ActionResult> TotalUsers()
         {
             var getUsers = await _userDetailsRepository.Get(null);
+
+            TempData["usersCount"] = getUsers.ToArray().Count();
 
             return View(getUsers);
         }

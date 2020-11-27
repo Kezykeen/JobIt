@@ -47,6 +47,26 @@ textarea {
     margin-left: 0;
 }
 
+#loginForm {
+    background-color: white;
+    width: 40vw;
+    margin: auto;
+}
+#loginForm .form-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+}
+#loginForm .form-group label {
+    width: 80%;
+}
+#loginForm .form-group input {
+    width: 60%;
+    margin-right: 145px;
+
+}
+
 /*SideNav*/
 .sidenav {
   height: 100%;
@@ -56,7 +76,7 @@ textarea {
   z-index: 4; /* Stay on top */
   top: 0; /* Stay at the top */
   transform: translate(-150%,0px);
-  transition:all 0.75s ease-in-out;
+  transition:all 0.5s ease-in-out;
   overflow-x: hidden;
   margin-top: 30px;
   padding-top: 21px;
@@ -65,7 +85,7 @@ textarea {
     font-size: 22px;
     color: white;
     text-align: center;
-    line-height: 70px;
+    line-height: 65px;
     background: #063146;
     user-select: none;
 }
@@ -83,7 +103,7 @@ textarea {
   display: block;
   height: 100%;
   padding-left: 30px;
-  line-height: 65px;
+  line-height: 60px;
   box-sizing: border-box;
   border-top: 1px solid rgba(255,255,255,.1);
   border-bottom: 1px solid black;
@@ -102,11 +122,7 @@ textarea {
   transition:all 0.75s ease-in-out;
 }
 
-#trigger {
-    color: white;
-    position: absolute;
-    top: 60px;
-    left: 300px;
+#openSideNav {
     width: 30px;
     height: 30px;
     cursor: pointer;
@@ -127,9 +143,9 @@ textarea {
 }
 
 .nav a, .nav-link {
-     color: white !important;
-     opacity: 0.8;
-     text-decoration: none !important;
+    color: white !important;
+    opacity: 0.8;
+    text-decoration: none !important;
 }
 .nav a:hover, .nav-link:hover {
     opacity: 1;
@@ -323,9 +339,10 @@ textarea {
     text-decoration: none;
 }
 
-.card-start .title h3 {
+.card-start .title h3 a {
      font-weight: 400;
      font-size: 24px;
+     color: #17729e;
 }
 
 .card-start .title .tag {
@@ -360,7 +377,6 @@ textarea {
 .jobHero{
      max-height: 400px;
 }
-
 .jobHero .content h1{
      color: white;
      display: block;
@@ -574,6 +590,7 @@ footer {
 }
 .footer-logo-container img:hover {
   opacity: 1;
+  transform: scale(1.05);
   color: white;
 }
 footer a {

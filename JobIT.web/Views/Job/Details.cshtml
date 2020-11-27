@@ -101,6 +101,15 @@
             resDisplay.innerHTML = '<ul>' + resArray.map(function (item) {
                 return '<li>' + item + '</li>';
             }).join('') + '</ul>';
+
+       // sidenav animation effect 
+            $("#openSideNav").click(function () {
+                $(".sidenav").toggleClass("active");
+            });
+
+            $("#closeSideNav").click(function () {
+                $(".sidenav").toggleClass("active");
+            });
         })
     </script>
 }
