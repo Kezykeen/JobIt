@@ -52,6 +52,9 @@ textarea {
     width: 40vw;
     margin: auto;
 }
+#loginForm h2 {
+    padding: 10px;
+}
 #loginForm .form-group {
     display: flex;
     justify-content: center;
@@ -500,8 +503,8 @@ aside p {
     padding-left: 40px;
 }
 
-/*Create Job Application and Update User Details*/
-.job-application-container, .update-details-container {
+/*Create Job Application, Update User Details and Edit Job*/
+.job-application-container, .update-details-container, .edit-job-container {
     width: 60vw;
     padding: 20px;
     background: white;
@@ -517,6 +520,9 @@ aside p {
     padding-left: 0px !important;
     padding-right: 0px !important;
     text-align: center;
+}
+.update-details-container input[type="submit"] {
+    width: 100px;
 }
 
 /*Admin Index*/
@@ -534,6 +540,9 @@ aside p {
     background-color: white;
     margin-top: 10px;
 }
+.review-application-container input[type="submit"] {
+    width: 120px;
+}
 
 .form-group {
     display: flex;
@@ -550,6 +559,41 @@ aside p {
     width: 90%;
 }
 
+/*Edit Job*/
+.edit-job-container .form-group label {
+    margin-right: 10px;
+}
+
+.edit-job-container .form-row {
+    display: flex;
+    justify-content: space-around;
+}
+.row-1, .row-2, .row-4, .row-3, .row-5 {
+    width: 85%;
+    margin-bottom: 30px;
+}
+.row-1 input {
+    width: 300px;
+    margin-right: 30px;
+}
+.row-1 label {
+    width: 300px;
+}
+.row-2 {
+    align-items: flex-start;
+    padding-left: 13px;
+}
+.row-2 input {
+    width: 100%;
+}
+.row-5 label {
+    margin-left: 460px;
+}
+.row-5 .checkbox {
+    margin-top: -30px;
+    width: 40px;
+    margin-left: 280px;
+}
 
 
 /*Footer*/

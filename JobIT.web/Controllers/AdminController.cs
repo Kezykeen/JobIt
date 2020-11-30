@@ -242,12 +242,12 @@ namespace JobIT.web.Controllers
                         if (jobApplications.Status.ToString() == "Accepted")
                         {
                             var mail = $"Congratulations!" + $" Your application for {jobAppliedFor.Title} at {jobAppliedFor.Company} has been accepted." + $" We will get to you very soon with details of your employment.";
-                            await _sendMailNotification.SendMail("kezykeen@gmail.com", mail, "Job Application Has Been Reviewed"); //temp code jobApplication.Email
+                            await _sendMailNotification.SendMail(jobApplications.Email, mail, "Job Application Has Been Reviewed");
                         }
                         else
                         {
                             var mail = $"Your application for {jobAppliedFor.Title} at {jobAppliedFor.Company} has been rejected." + $" Don't lose hope though, with our ever growing list of jobs, you can be sure to never run out of possible jobs.";
-                            await _sendMailNotification.SendMail("kezykeen@gmail.com", mail, "Job Application Has Been Reviewed"); //temp code currentUserDetails.Email
+                            await _sendMailNotification.SendMail(jobApplications.Email, mail, "Job Application Has Been Reviewed");
                         }
                         getJobApplication.Status = jobApplications.Status;
                         await _jobApplicationsRepository.Update(getJobApplication);

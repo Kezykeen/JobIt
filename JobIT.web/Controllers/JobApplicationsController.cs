@@ -84,8 +84,8 @@ namespace JobIT.web.Controllers
                 var currentUserDetails = await _userDetailsRepository.GetSingleAsync(x => x.UserId == userId);
                 if (currentUserDetails != null)
                 {
-                    var mail = $"Your application for {map.Job.Title} at {map.Job.Company} was successful," + $" We will get back to you with details of our feedback. Ensure to frequent your dashboard.";
-                    await _sendMailNotification.SendMail("kezykeen@gmail.com", mail, "Job application notification"); //temp code currentUserDetails.Email
+                    var mail = $"Your application was successful," + $" We will get back to you with details of our feedback. Ensure to frequent your dashboard.";
+                    await _sendMailNotification.SendMail(currentUserDetails.Email, mail, "Job application notification");
                 }
 
                 this.AddNotification("Application Successful", NotificationType.SUCCESS); //success alert for successful job application

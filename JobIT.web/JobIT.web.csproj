@@ -349,6 +349,7 @@
     <Content Include="Views\Admin\ApplicationsUnattended.cshtml" />
     <Content Include="Views\Admin\TotalApplications.cshtml" />
     <Content Include="Views\Admin\TotalUsers.cshtml" />
+    <Content Include="Views\Admin\JobDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
